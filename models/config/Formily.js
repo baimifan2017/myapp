@@ -4,19 +4,19 @@
  * @date:2021-05-02
  */
 const { sequelize } = require('../../db/init')
-const { Database } = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 
 const ModelDesign = sequelize.define('ModelDesign',{
     modelName: {
-        type:Database.STRING(50),
+        type:DataTypes.STRING(50),
         allowNull:false
     },
     modelCode:{
-        type:Database.STRING(50),
+        type:DataTypes.STRING(50),
         unique:true
     },
     frozen:{
-        type:Database.BOOL(false),
+        type:DataTypes.BOOL(false),
     },
 })

@@ -3,7 +3,10 @@ const app = express()
 const session = require('express-session')
 const MySQLStore = require('connect-mysql')(session)
 const bodyParser = require('body-parser');
-const { session_options } = require('../utils/config')
+const {session_options} = require('../utils/config')
+
+// comm
+const commRouter = require('./module_comm')
 
 // config
 const configRouter = require('./module_config')
@@ -32,14 +35,28 @@ app.use(session({
 
 
 app.use(configRouter);
+// 通用路由
+app.use(commRouter)
+// 跨域设置
+const allow_origin = (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length,Authorization,Accept,X-Requested-With');
+    // res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+    // if (req.method === 'option') {
+    //     res.send(200)
+    // } else {
+    //     next()
+    // }
 
-
+    next()
+}
 // 异常拦截器
 const error_handler_middleware = (err, req, res, next) => {
     if (err) {
         const {message} = err
         res.status(500)
             .json({
+                success: false,
                 message: `${message}`
             })
     } else {
@@ -60,6 +77,7 @@ const logger_middleware = (req, res, next) => {
 app.use((error, req, res, next) => {
     logger_middleware(req, res, next)
     error_handler_middleware(error, req, res, next);
+    // allow_origin(req, res, next)
 });
 
 app.listen(5001, () => {

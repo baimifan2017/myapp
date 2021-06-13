@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    script: 'user.router.js',
+    script: 'userRouter.js',
     watch: '.'
   }, {
     script: './service-worker/',

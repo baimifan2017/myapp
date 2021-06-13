@@ -5,8 +5,10 @@
  */
 
 const {Sequelize} = require('sequelize');
+const mongoose = require('mongoose');
 
-const sequelize = new Sequelize('express-test', 'root', '00000000', {
+
+const sequelize = new Sequelize('express-test', 'root', 'root', {
     host: "127.0.0.1",
     dialect: "mysql",
     pool: {
@@ -32,4 +34,25 @@ sequelize.authenticate()
     })
 
 
-module.exports = {sequelize, Sequelize};
+
+// mongodb
+const url = 'mongodb://127.0.0.1:27017/express';
+options = {
+    useNewUrlParser: true,
+    poolSize: 5, // 连接池中维护的连接数
+    reconnectTries: Number.MAX_VALUE,
+    keepAlive: 120,
+};
+// mongo 数据库连接配置
+const mongoClient = mongoose.createConnection(url, options);
+
+//监听数据库连接状态
+mongoClient.once('open', () => {
+    console.log('mongo数据库连接成功……')
+})
+mongoClient.once('close', () => {
+    console.log('mongo数据库断开……')
+});
+
+
+module.exports = {sequelize, Sequelize,mongoClient};

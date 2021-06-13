@@ -5,6 +5,7 @@
  */
 const {sequelize} = require('../../db/init')
 const {DataTypes} = require('sequelize');
+const File = require('./File');
 
 const User = sequelize.define('User', {
     // 在这里定义模型属性
@@ -31,15 +32,44 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(20),
         unique: 'uk_user_unique',
     },
+    // 年龄
+    age: {
+        type: DataTypes.INTEGER,
+    },
     // 地址
     address: {
         type: DataTypes.STRING(100)
     },
-    photo: {
-        type: DataTypes.BLOB,
+    attachIds: {
+        type: DataTypes.STRING(50),
     },
     password: {
         type: DataTypes.STRING(50)
+    },
+    deptId: {
+        type: DataTypes.STRING(50)
+    },
+    // 工种
+    typeOfWorkId: {
+        type: DataTypes.STRING(50)
+    },
+    description: {
+        type: DataTypes.STRING(200)
+    },
+    // 身份证号
+    idNumber: {
+        type: DataTypes.STRING(20),
+        notNull: true
+    },
+    // 银行卡号
+    bankAccountNumber: {
+        type: DataTypes.INTEGER,
+        notNull: true
+    },
+    // 银行户名称
+    bankAccountName: {
+        type: DataTypes.STRING(50),
+        notNull: true
     },
     // 租户代码
     tenement: {
@@ -54,11 +84,11 @@ const User = sequelize.define('User', {
     modelName: 'User'
 });
 
-// 模型实例
+//模型实例
 // (async () => {
-//     await User.sync({ force: true });
+//     await User.sync({force:true});
 // })();
-
+//
 
 module.exports = User;
 

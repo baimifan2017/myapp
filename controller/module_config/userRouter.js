@@ -5,23 +5,22 @@
  */
 const express = require('express');
 const router = express.Router();
-const CommWays = require('../../comm/CommWays')
 const User = require('../../models/config/User')
-const UserService = require('../../service/module_config/user/user.service')
-const {resWithSuccess} = require('../../comm/response')
+const UserService = require('../../service/module_config/UserService')
+const {resWithSuccess,resWithFail} = require('../../comm/response')
 
 
-const userService = new UserService();
+const userService = new UserService(router, User);
 
 // 登录
-router.post('/login',  (async (req, res) => {
+router.post('/login', (async (req, res) => {
     const {userName, password} = req.body;
     const user = await userService.login(userName, password, req.session)
-    if(user){
-        console.log('user---',user)
-        debugger
+    if (user) {
         resWithSuccess.data = user;
         res.json(resWithSuccess)
+    }else {
+        return resWithFail.msg = '请检查用户名及密码！'
     }
 }))
 
@@ -39,8 +38,8 @@ router.get('/loginOut', (async (req, res) => {
     })
 }))
 
-CommWays.findByPage(router, User);
-CommWays.save(router, User);
-CommWays.delById(router, User);
+userService.findByPage();
+userService.save();
+userService.delById();
 
 module.exports = router

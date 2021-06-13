@@ -5,11 +5,14 @@
  */
 const express = require("express");
 const router = express.Router()
-
-const userRouter = require('./user.router')
+const userRouter = require('./userRouter')
+const orgRouter = require('./orgRouter')
 
 // 用户信息
 router.use('/user', userRouter)
+
+// 部门信息
+router.use('/dept', orgRouter)
 
 
 module.exports = router;
