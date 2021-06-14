@@ -4,7 +4,7 @@
  * @date:2021-04-16
  */
 
-const {sequelize,Sequelize} = require('../../db/init')
+const {sequelize, Sequelize} = require('../../db/init')
 const {dLogin} = require('../../dao/dao_config/user')
 const User = require('../../models/config/User')
 const File = require('../../models/config/File')
@@ -14,6 +14,7 @@ const {resWithSuccess, resWithFail} = require('../../comm/response')
 
 
 const Op = Sequelize.Op;
+
 class UserService extends BaseService {
     constructor(router, model) {
         super(router, model);
@@ -30,7 +31,7 @@ class UserService extends BaseService {
         if (user[0]) {
             return resWithSuccess.data = {
                 user: user[0],
-                token: Jwt.generateToken({userId:user[0].id})
+                token: Jwt.generateToken({userId: user[0].id})
             }
         } else {
             return null;
@@ -43,7 +44,7 @@ class UserService extends BaseService {
      * @param req
      * @param res
      */
-    register = async (req, res) => {
+    register = async (req, res,next) => {
         // 开始一个事务并保存到变量中
         const tran = await sequelize.transaction();
         const {body} = req;
@@ -58,26 +59,27 @@ class UserService extends BaseService {
             res.json(resWithFail);
         }
         try {
-            // await updateFileIsLinked('10');
-
-            await File.update({isLinked: true}, {
-                where: {
-                    id: {
-                        [Op.in]: body.attachIds
+            const {attachIds} = body;
+            if (attachIds) {
+                await File.update({isLinked: true}, {
+                    where: {
+                        id: {
+                            [Op.in]: attachIds
+                        }
                     }
-                }
-            })
-            body.attachIds = body.attachIds.toString();
-            const {dataValues} = await User.create(body,{transaction:tran});
+                })
+                body.attachIds = attachIds.toString();
+            }
+            const {dataValues} = await User.create(body, {transaction: tran});
             // 提交事务
             await tran.commit();
 
             resWithSuccess.data = dataValues
             res.json(resWithSuccess);
-        } catch (e) {
-            console.log(e)
+        } catch (error) {
             // 如果发生异常，回滚事务。
             await tran.rollback();
+            next(error)
         }
     }
 }

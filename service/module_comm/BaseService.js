@@ -61,20 +61,20 @@ class CommWays {
             if (!body) throw new Error('查询参数不能为空！');
 
             let searchParams = {};
-            const { current,pageSize,order,whereArr} = body;
+            const {current, pageSize, order, whereArr} = body;
 
-            if(pageSize){
+            if (pageSize) {
                 searchParams.limit = pageSize;
             }
-            if(current){
+            if (current) {
                 searchParams.offset = Number(pageSize) * current
             }
-            if(order){
+            if (order) {
                 searchParams.order = order
             }
-            if(whereArr){
+            if (whereArr) {
                 searchParams.where = {
-                    [Op.or]:whereArr
+                    [Op.or]: whereArr
                 }
             }
 
@@ -100,6 +100,25 @@ class CommWays {
                 res.json(Response.resWithFail('删除失败', instance))
             }
             res.json(Response.resWithSuccess('删除成功', instance))
+        }))
+    }
+
+    findOneById() {
+        return this.router.get('findOneById', (async (req, res) => {
+            const {body} = req;
+            if (body.id) {
+                const instance = await this.model.findOne({
+                    where: {
+                        id: body.id
+                    }
+                })
+
+                if (!instance) {
+                    res.json(Response.resWithFail('查询失败', instance))
+                } else {
+                    res.json(Response.resWithSuccess('查询成功', instance))
+                }
+            }
         }))
     }
 
@@ -130,6 +149,7 @@ class CommWays {
             if (node.length === 0) return;
             return node;
         }
+
         return res;
     }
 
