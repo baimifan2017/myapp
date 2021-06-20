@@ -60,25 +60,8 @@ class CommWays {
             const {body} = req;
             if (!body) throw new Error('查询参数不能为空！');
 
-            let searchParams = {};
-            const {current, pageSize, order, whereArr} = body;
-
-            if (pageSize) {
-                searchParams.limit = pageSize;
-            }
-            if (current) {
-                searchParams.offset = Number(pageSize) * current
-            }
-            if (order) {
-                searchParams.order = order
-            }
-            if (whereArr) {
-                searchParams.where = {
-                    [Op.or]: whereArr
-                }
-            }
-
-            resWithSuccess.data = await this.model.findAll(body);
+            const searchParams = this.buildSearchParam(body);
+            resWithSuccess.data = await this.model.findAll(searchParams);
             res.json(resWithSuccess);
         }))
     }
@@ -103,14 +86,18 @@ class CommWays {
         }))
     }
 
+    /**
+     * 根据id进行查询
+     * @returns {*}
+     */
     findOneById() {
-        return this.router.get('findOneById', (async (req, res) => {
+        return this.router.get('/findOneById', (async (req, res) => {
             const {body} = req;
             if (body.id) {
                 const instance = await this.model.findOne({
                     where: {
                         id: body.id
-                    }
+                    },
                 })
 
                 if (!instance) {
@@ -122,12 +109,36 @@ class CommWays {
         }))
     }
 
+    findTree() {
+        return this.router.get('/findTree', (async (req, res) => {
+            const {body} = req;
+
+            let searchParams;
+            if (Object.keys(body).length > 0) {
+                searchParams = this.buildSearchParam(body)
+            }
+            // 禁止返回数据的model封装
+            searchParams = {...searchParams, ...{raw: true}}
+            const instance = await this.model.findAll(searchParams)
+
+            if (!instance) {
+                res.json(Response.resWithFail('查询失败', instance))
+            } else {
+                const data = this.buildTree(instance)
+                res.json(Response.resWithSuccess('查询成功', data))
+            }
+        }))
+    }
+
+
     /**
      * 构造树形数据
      * @param data array 类型
      * @return {[]}
      */
-    static buildTree(data) {
+    buildTree(data) {
+
+        console.log(data, 'data22')
         const res = [];
         // 找出所有根结点
         for (const item of data) {
@@ -141,7 +152,7 @@ class CommWays {
         function getNode(id) {
             const node = [];
             for (const item of data) {
-                if (item.pid === id) {
+                if (item.pid == id) {
                     item.children = getNode(item.id);
                     node.push(item);
                 }
@@ -153,7 +164,30 @@ class CommWays {
         return res;
     }
 
-
+    /**
+     * 构建查询
+     * @param params
+     * @returns {*}
+     */
+    buildSearchParam = (body) => {
+        let searchParams = {};
+        const {current = undefined, pageSize = undefined, order = undefined, whereArr = undefined} = body;
+        if (pageSize) {
+            searchParams.limit = pageSize;
+        }
+        if (current) {
+            searchParams.offset = Number(pageSize) * (current - 1)
+        }
+        if (order) {
+            searchParams.order = order
+        }
+        if (whereArr) {
+            searchParams.where = {
+                [Op.or]: whereArr
+            }
+        }
+        return searchParams;
+    }
 }
 
 

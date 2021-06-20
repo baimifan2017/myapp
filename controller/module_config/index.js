@@ -12,7 +12,7 @@ const orgRouter = require('./orgRouter')
 router.use('/user', userRouter)
 
 // 部门信息
-router.use('/dept', orgRouter)
+router.use('/org', orgRouter)
 
 
 module.exports = router;

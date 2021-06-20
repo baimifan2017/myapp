@@ -4,7 +4,7 @@ const session = require('express-session')
 const MySQLStore = require('connect-mysql')(session)
 const bodyParser = require('body-parser');
 const {session_options} = require('../utils/config')
-
+const morgan = require('morgan')
 // comm
 const commRouter = require('./module_comm')
 
@@ -18,6 +18,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 // parse application/json
 app.use(bodyParser.json());
+
+// 日志
+app.use(morgan('tiny'))
 
 // session配置
 app.use(session({
@@ -34,13 +37,14 @@ app.use(session({
 }))
 
 
-app.use(configRouter);
-// 通用路由
-app.use(commRouter)
 // 跨域设置
 const allow_origin = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length,Authorization,Accept,X-Requested-With');
+    res.header({
+        'Content-Type': 'application/json',
+    })
+
     // res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
     // if (req.method === 'option') {
     //     res.send(200)
@@ -50,6 +54,11 @@ const allow_origin = (req, res, next) => {
 
     next()
 }
+
+app.use(configRouter);
+// 通用路由
+app.use(commRouter)
+
 // 异常拦截器
 const error_handler_middleware = (err, req, res, next) => {
     if (err) {
@@ -77,11 +86,11 @@ const logger_middleware = (req, res, next) => {
 app.use((error, req, res, next) => {
     logger_middleware(req, res, next)
     error_handler_middleware(error, req, res, next);
-    // allow_origin(req, res, next)
+    allow_origin(req, res, next)
 });
 
 app.listen(5001, () => {
-    console.log('server running.....')
+    console.log('server running at port:5001.....')
 })
 
 module.exports = app;

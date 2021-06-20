@@ -11,34 +11,34 @@ const Organization = sequelize.define('Organization', {
     // 组织机构名称
     orgName: {
         type: DataTypes.STRING(50),
+        allowNull: false
     },
     // 组织机构代码
     orgCode: {
+        type: DataTypes.STRING(50),
+        allowNull: false
+    },
+    orgCodePath: {
         type: DataTypes.STRING(50)
     },
-    // 部门名称
-    departName: {
-        type: DataTypes.STRING(50),
-        allowNull: false
-    },
-    // 部门代码
-    departCode: {
-        type: DataTypes.STRING(50),
-        allowNull: false
-    },
-    // 职位
-    jobTitleName: {
-        type: DataTypes.STRING(50),
-        allowNull: false
+    orgNamePath: {
+        type: DataTypes.STRING(50)
     },
     // 父级节点
-    parentId: {
+    pid: {
         type: DataTypes.STRING(50)
+    },
+    // 备注
+    remark: {
+        type: DataTypes.STRING(500)
     },
     // 是否冻结
     frozen: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
+    },
+    tenement: {
+        type: DataTypes.STRING(20)
     }
 }, {
     timestamps: true,

@@ -30,9 +30,12 @@ class Jwt {
                     resWithFail.msg = 'token过期或不存在'
                     res.status(401).json(resWithFail);
                 }else {
-                    next(decoded)
+                    next()
                 }
             })
+        }else {
+            resWithFail.msg = 'token过期或不存在'
+            res.status(401).json(resWithFail)
         }
     }
 }
