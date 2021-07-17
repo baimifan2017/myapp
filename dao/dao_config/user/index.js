@@ -3,6 +3,7 @@
  * @desc: 服务层
  * @date:2021-04-16
  */
+const {hash} = require('../../../utils');
 const {QueryTypes} = require('sequelize');
 const {sequelize} = require('../../../db/init');
 
@@ -12,7 +13,7 @@ const dLogin = (userName, passWord) => {
     return sequelize.query(
         "select * from tb_user where userName = $1 and passWord = $2",
         {
-            bind: [userName, passWord],
+            bind: [userName, hash(passWord)],
             type: QueryTypes.SELECT
         })
 }

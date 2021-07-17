@@ -51,7 +51,6 @@ const allow_origin = (req, res, next) => {
     // } else {
     //     next()
     // }
-
     next()
 }
 
@@ -62,7 +61,8 @@ app.use(commRouter)
 // 异常拦截器
 const error_handler_middleware = (err, req, res, next) => {
     if (err) {
-        const {message} = err
+        const {message} = err;
+        console.error('异常：', message)
         res.status(500)
             .json({
                 success: false,
@@ -85,8 +85,8 @@ const logger_middleware = (req, res, next) => {
 
 app.use((error, req, res, next) => {
     logger_middleware(req, res, next)
-    error_handler_middleware(error, req, res, next);
     allow_origin(req, res, next)
+    error_handler_middleware(error, req, res, next);
 });
 
 app.listen(5001, () => {

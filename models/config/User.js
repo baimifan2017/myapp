@@ -6,8 +6,10 @@
 const {sequelize} = require('../../db/init')
 const {DataTypes} = require('sequelize');
 const File = require('./File');
+const {hash} = require("../../utils");
 
-const User = sequelize.define('User', {
+
+const User = sequelize.define('user', {
     // 在这里定义模型属性
     userName: {
         type: DataTypes.STRING(50),
@@ -44,7 +46,10 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(50),
     },
     password: {
-        type: DataTypes.STRING(50)
+        type: DataTypes.STRING(200),
+        set(value) {
+            this.setDataValue('password', hash(value))
+        }
     },
     deptId: {
         type: DataTypes.STRING(50)
@@ -81,14 +86,13 @@ const User = sequelize.define('User', {
     freezeTableName: true,
     //表名称
     tableName: 'tb_user',
-    modelName: 'User'
 });
 
 //模型实例
 // (async () => {
 //     await User.sync({force:true});
 // })();
-//
+
 
 module.exports = User;
 

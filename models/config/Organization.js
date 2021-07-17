@@ -6,8 +6,9 @@
 
 const {sequelize} = require('../../db/init');
 const {DataTypes} = require('sequelize');
+const comm = require('../comm/Comm')
 
-const Organization = sequelize.define('Organization', {
+const Organization = sequelize.define('organization', {
     // 组织机构名称
     orgName: {
         type: DataTypes.STRING(50),
@@ -16,7 +17,8 @@ const Organization = sequelize.define('Organization', {
     // 组织机构代码
     orgCode: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     orgCodePath: {
         type: DataTypes.STRING(50)
@@ -28,26 +30,16 @@ const Organization = sequelize.define('Organization', {
     pid: {
         type: DataTypes.STRING(50)
     },
-    // 备注
-    remark: {
-        type: DataTypes.STRING(500)
-    },
-    // 是否冻结
-    frozen: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
-    tenement: {
-        type: DataTypes.STRING(20)
-    }
+
+    ...comm
 }, {
     timestamps: true,
     tableName: 'tb_organization'
 });
 
 // 如果不存在，则创建当前表。
-(async () => {
-    await Organization.sync()
-})()
+// (async () => {
+//     await Organization.sync({force:true})
+// })()
 
 module.exports = Organization;

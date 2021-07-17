@@ -20,7 +20,8 @@ router.post('/login', (async (req, res) => {
         resWithSuccess.data = user;
         res.json(resWithSuccess)
     }else {
-        return resWithFail.msg = '请检查用户名及密码！'
+        resWithFail.msg = '请检查用户名及密码！'
+        res.json(resWithFail)
     }
 }))
 

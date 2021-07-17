@@ -20,31 +20,14 @@ class UserService extends BaseService {
         super(router, model);
     }
 
-    /**
-     * 用户登录
-     * @param userName
-     * @param password
-     * @param session
-     */
-    login = async (userName, password, session) => {
-        const user = await dLogin(userName, password)
-        if (user[0]) {
-            return resWithSuccess.data = {
-                user: user[0],
-                token: Jwt.generateToken({userId: user[0].id})
-            }
-        } else {
-            return null;
-        }
-    }
 
     /**
-     * 用户注册
+     * 新增采购申请
      * @return {Promise<void>}
      * @param req
      * @param res
      */
-    register = async (req, res,next) => {
+    save = async (req, res,next) => {
         // 开始一个事务并保存到变量中
         const tran = await sequelize.transaction();
         const {body} = req;

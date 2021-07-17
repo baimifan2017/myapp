@@ -2,18 +2,18 @@
 const express = require('express');
 const router = express.Router();
 const Organization = require('../../models/config/Organization')
-const OrganizationService = require('../../service/module_config/OrganizationService')
+const BaseController = require('../module_comm/BaseController')
 const Jwt = require('../../service/module_comm/Jwt');
 
 // 权限验证中间件
 router.use(Jwt.verifyToken)
 
 
-const orgService = new OrganizationService(router, Organization)
+const orgController = new BaseController(router, Organization)
 
-orgService.findByPage();
-orgService.save();
-orgService.delById();
-orgService.findTree();
+orgController.findByPage();
+orgController.save();
+orgController.delById();
+orgController.findTree();
 
 module.exports = router;

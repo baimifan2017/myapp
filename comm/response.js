@@ -42,6 +42,32 @@ class Response {
             data: data || null
         }
     }
+
+    static resResponse = (instance) => {
+        return {
+            success: instance ? true : false,
+            msg: instance ? '成功' : '失败',
+            data: instance || null
+        }
+    }
+
+    // 返回分页信息
+    static pagingRes = (current, pageSize, instance) => {
+        const {
+            count = 0,
+            rows = 0,
+        } = instance;
+
+        return {
+            success: instance ? true : false,
+            total: count,
+            current: current,
+            pageSize: pageSize,
+            data: rows
+        }
+
+    }
+
 }
 
-module.exports = {resWithSuccess, resWithFail,Response}
+module.exports = {resWithSuccess, resWithFail, Response}
