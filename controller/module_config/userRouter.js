@@ -28,6 +28,9 @@ router.post('/login', (async (req, res) => {
 // 注册
 router.post('/register', userService.register)
 
+
+router.post('/findHeaderByPage', userService.findHeaderByPage)
+
 // 退出登录
 router.get('/loginOut', (async (req, res) => {
     // 清理全部session
@@ -38,6 +41,8 @@ router.get('/loginOut', (async (req, res) => {
         msg: '退出成功！'
     })
 }))
+
+
 
 userService.findByPage();
 userService.save();

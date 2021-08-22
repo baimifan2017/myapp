@@ -3,7 +3,8 @@
  */
 const express = require('express');
 const router = express.Router();
-const PurchaseApply = require('../../models/purchase/PurchaseHeader')
+const PurchaseHeader= require('../../models/purchase/PurchaseHeader')
+const PurchaseService= require('../../service/module_purchase/PurchaseService')
 const BaseController = require('../module_comm/BaseController')
 const Jwt = require('../../service/module_comm/Jwt');
 
@@ -11,23 +12,21 @@ const Jwt = require('../../service/module_comm/Jwt');
 router.use(Jwt.verifyToken)
 
 
-const purchaseApplyController = new BaseController(router, PurchaseApply)
+const purchaseHeaderController = new BaseController(router, PurchaseHeader);
+const purchaseService  = new PurchaseService();
 
-router.post('/findHeaderByPage', (async (req, res, next) => {
-    let {body} = req;
-    body.fields = ['name', 'code', 'tel', 'address', 'socialCreditCode']
-    const searchParams = purchaseApplyController.buildSearchParam();
-    try {
-        const instance = await PurchaseApply.findAll(searchParams);
-        res.json(Response.resResponse(instance));
-    }catch (error){
-        next(error)
-    }
-}))
+router.post('/save', purchaseService.saveApply)
 
-purchaseApplyController.findByPage();
-purchaseApplyController.save();
-purchaseApplyController.delById();
-purchaseApplyController.findTree();
+
+router.post('/findItems', purchaseService.findItems)
+
+
+
+purchaseHeaderController.findByPage();
+purchaseHeaderController.findOneById({
+    includeAlias:'purchaseItems'
+});
+purchaseHeaderController.delById();
+purchaseHeaderController.findTree();
 
 module.exports = router;

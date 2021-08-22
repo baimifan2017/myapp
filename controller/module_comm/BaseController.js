@@ -99,10 +99,11 @@ class CommWays {
 
     /**
      * 根据id进行查询
-     * @param includeAlias 关联model别名
+     * @param options 关联model别名
      * @returns {*}
      */
-    findOneById(includeAlias) {
+    findOneById(option = {}) {
+        const {includeAlias} = option;
         return this.router.get('/findOneById', (async (req, res) => {
             const {query} = req;
             let searchParam = {};

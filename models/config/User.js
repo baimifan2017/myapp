@@ -11,13 +11,16 @@ const {hash} = require("../../utils");
 
 const User = sequelize.define('user', {
     // 在这里定义模型属性
-    userName: {
+    name: {
         type: DataTypes.STRING(50),
         allowNull: false,
         validate: {
             len: [2, 50]
         },
         unique: 'uk_user_unique',
+    },
+    code:{
+      type:DataTypes.STRING(50)
     },
     sex: {
         type: DataTypes.ENUM,

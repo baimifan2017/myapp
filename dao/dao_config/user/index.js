@@ -11,7 +11,7 @@ const {sequelize} = require('../../../db/init');
 // 用户登录
 const dLogin = (userName, passWord) => {
     return sequelize.query(
-        "select * from tb_user where userName = $1 and passWord = $2",
+        "select * from tb_user where name = $1 and passWord = $2",
         {
             bind: [userName, hash(passWord)],
             type: QueryTypes.SELECT

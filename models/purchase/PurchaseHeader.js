@@ -5,16 +5,11 @@
  */
 const {sequelize} = require('../../db/init')
 const {DataTypes} = require('sequelize');
+const PurchaseItem = require('./PurchaseItem')
 const comm = require('../comm/Comm');
 
-const PurchaseHeader = sequelize.define('purchaseApply', {
-    // 申请单号
-    applyId: {
-        type: DataTypes.STRING(50),
-        allowNull: true,
-        unique: 'uk_apply_id'
-    },
-    applyNo:{
+const PurchaseHeader = sequelize.define('purchaseHeader', {
+    applyNo: {
         type: DataTypes.STRING(50),
         allowNull: true,
         unique: 'uk_apply_no'
@@ -49,28 +44,39 @@ const PurchaseHeader = sequelize.define('purchaseApply', {
     // 流程状态
     status: {
         type: DataTypes.ENUM,
-        values: ['init', 'process', 'completed','refused'],
+        values: ['init', 'process', 'completed', 'refused'],
         defaultValue: 'init'
     },
     // 审批回复
-    approveRes:{
+    approveRes: {
         type: DataTypes.STRING(200),
     },
     ...comm
 }, {
     timestamps: true,
-    version:true, // 乐观锁
+    version: true, // 乐观锁
     comment: '物料采购',
     freezeTableName: true,
     //表名称
-    tableName: 'tb_purchase_apply',
+    tableName: 'tb_purchase_header',
     modelName: 'User'
 });
 
 //模型实例
-(async () => {
-    await PurchaseHeader.sync({force: true});
-})();
+// (async () => {
+//     await sequelize.sync({force: true});
+// })();
+//
+
+PurchaseHeader.hasMany(PurchaseItem, {
+    as: 'purchaseItems',
+    foreignKey: {
+        // 采购申请单采购行项目不能为空
+        allowNull: false
+    }
+})
+
+
 
 
 module.exports = PurchaseHeader;

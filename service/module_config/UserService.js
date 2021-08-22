@@ -8,14 +8,16 @@ const {sequelize, Sequelize} = require('../../db/init')
 const {dLogin} = require('../../dao/dao_config/user')
 const User = require('../../models/config/User')
 const File = require('../../models/config/File')
-const BaseService = require('../../controller/module_comm/BaseController')
+const BaseController = require('../../controller/module_comm/BaseController')
+const BaseService = require('../../service/module_comm/BaseService')
+const {Response} = require('../../comm/response')
 const Jwt = require('../module_comm/Jwt')
 const {resWithSuccess, resWithFail} = require('../../comm/response')
 
 
 const Op = Sequelize.Op;
 
-class UserService extends BaseService {
+class UserService extends BaseController {
     constructor(router, model) {
         super(router, model);
     }
@@ -44,7 +46,7 @@ class UserService extends BaseService {
      * @param req
      * @param res
      */
-    register = async (req, res,next) => {
+    register = async (req, res, next) => {
         // 开始一个事务并保存到变量中
         const tran = await sequelize.transaction();
         const {body} = req;
@@ -81,6 +83,21 @@ class UserService extends BaseService {
             await tran.rollback();
             next(error)
         }
+    }
+
+
+    findHeaderByPage = async (req, res, next) => {
+        const baseService = new BaseService(this.model);
+
+        try {
+            let {body, body: {current, pageSize}} = req;
+            body.fields = ['name', 'sex', 'email', 'id', 'code']
+            const instance = await baseService.findByPage(body);
+            res.json(Response.pagingRes(current, pageSize, instance))
+        } catch (err) {
+            next(err)
+        }
+
     }
 }
 

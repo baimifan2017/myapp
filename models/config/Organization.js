@@ -10,12 +10,12 @@ const comm = require('../comm/Comm')
 
 const Organization = sequelize.define('organization', {
     // 组织机构名称
-    orgName: {
+    name: {
         type: DataTypes.STRING(50),
         allowNull: false
     },
     // 组织机构代码
-    orgCode: {
+    code: {
         type: DataTypes.STRING(50),
         allowNull: false,
         unique: true

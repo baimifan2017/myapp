@@ -53,7 +53,9 @@ navigationController.findTree()
 // 删除
 navigationController.delById()
 // 详情
-navigationController.findOneById('powerBtn')
+navigationController.findOneById({
+    includeAlias: 'powerBtn' // 关联查询别名
+})
 
 
 module.exports = router;

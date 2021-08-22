@@ -7,17 +7,12 @@ const {sequelize} = require('../../db/init')
 const {DataTypes} = require('sequelize');
 const comm = require('../comm/Comm');
 
-const PurchaseHeader = sequelize.define('purchaseApply', {
+const PurchaseItem = sequelize.define('purchaseItem', {
     // 申请单号
-    applyId: {
-        type: DataTypes.STRING(50),
-        allowNull: true,
-        unique: 'uk_apply_id'
-    },
     planUseDate: {
         type: DataTypes.DATE
     },
-    applyNo:{
+    applyNo: {
         type: DataTypes.STRING(50),
         allowNull: true,
         unique: 'uk_apply_no'
@@ -26,7 +21,7 @@ const PurchaseHeader = sequelize.define('purchaseApply', {
     name: {
         type: DataTypes.STRING(50),
     },
-    // 规格新型号
+    // 规格型号
     specification: {
         type: DataTypes.STRING(50),
     },
@@ -35,8 +30,12 @@ const PurchaseHeader = sequelize.define('purchaseApply', {
         type: DataTypes.INTEGER,
         notNull: true
     },
+    // 单位
+    unit: {
+        type: DataTypes.STRING(20),
+    },
     // 单价
-    amount: {
+    unitPrice: {
         type: DataTypes.DOUBLE,
     },
     // 总价
@@ -44,7 +43,10 @@ const PurchaseHeader = sequelize.define('purchaseApply', {
         type: DataTypes.DOUBLE,
     },
     // 供应商
-    supplier: {
+    supplierId: {
+        type: DataTypes.STRING(200)
+    },
+    supplierName: {
         type: DataTypes.STRING(200)
     },
     // 计划使用日期
@@ -60,19 +62,19 @@ const PurchaseHeader = sequelize.define('purchaseApply', {
     ...comm
 }, {
     timestamps: true,
-    version:true, // 乐观锁
+    version: true, // 乐观锁
     comment: '物料采购',
     freezeTableName: true,
     //表名称
-    tableName: 'tb_purchase_apply',
+    tableName: 'tb_purchase_item',
     modelName: 'User'
 });
 
 //模型实例
-(async () => {
-    await PurchaseHeader.sync({force: true});
-})();
+// (async () => {
+//     await sequelize.sync({force: true});
+// })();
 
 
-module.exports = PurchaseHeader;
+module.exports = PurchaseItem;
 

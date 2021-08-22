@@ -6,7 +6,7 @@ const {sequelize} = require('../../db/init');
 const {DataTypes} = require('sequelize');
 const comm = require('../comm/Comm');
 
-const Supplier = sequelize.define('Supplier', {
+const Supplier = sequelize.define('supplier', {
     // 供应商名称
     name: {
         type: DataTypes.STRING(50),
@@ -15,7 +15,6 @@ const Supplier = sequelize.define('Supplier', {
     // 供应商代码
     code: {
         type: DataTypes.STRING(50),
-        allowNull: false
     },
     // 联系电话
     tel: {

@@ -11,10 +11,12 @@ const commRouter = require('./module_comm')
 // config
 const configRouter = require('./module_config')
 
+const materialRouter = require('./module_ material')
+
 
 // false:表示使用系统模块querystring来处理，也是官方推荐的
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}));
+// app.use(bodyParser.urlencoded({extended: false}));
 
 // parse application/json
 app.use(bodyParser.json());
@@ -54,9 +56,12 @@ const allow_origin = (req, res, next) => {
     next()
 }
 
+
 app.use(configRouter);
 // 通用路由
 app.use(commRouter)
+
+app.use(materialRouter)
 
 // 异常拦截器
 const error_handler_middleware = (err, req, res, next) => {
